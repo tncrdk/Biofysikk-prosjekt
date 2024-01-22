@@ -7,7 +7,7 @@ def test_generate_flat_polymer():
     """simple test for generate_flat_polymer"""
     expected_result = np.array([[-1, 0], [0, 0], [1, 0]])
     res = polymer.generate_flat_polymer(3)
-    assert not np.all(
+    assert np.all(
         np.equal(res, expected_result)
     ), f"Expected\n\t{expected_result}\nGot\n\t{res}"
 

@@ -174,12 +174,12 @@ def generate_flat_polymer(
     Returns:
         np.ndarray: den genererte polymeren
     """ """"""
-    polymer_array = np.zeros((polymer_length, 2))
+    polymer_array = np.zeros((polymer_length, 2), dtype = np.int32)
     polymer_start = -int(polymer_length / 2) + mid_of_polymer[0]
     # + 1/2 for å håndtere partall
     polymer_end = int((polymer_length + 1) / 2) + mid_of_polymer[0]
     polymer_array[:, 1] = mid_of_polymer[1]
-    polymer_array[:, 0] = np.arange(polymer_start, polymer_end, 1)
+    polymer_array[:, 0] = np.arange(polymer_start, polymer_end, 1, dtype = np.int32)
 
     return polymer_array
 
