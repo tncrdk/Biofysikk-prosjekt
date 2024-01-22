@@ -16,3 +16,7 @@ er der.
 `README.md`: Denne filen.
 
 `Pipfile**`: Virtual environment
+
+## Potensielle kilder
+
+Finne lengst avstand: https://mukeshiiitm.wordpress.com/2008/05/27/find-the-farthest-pair-of-points/Biofysikk
