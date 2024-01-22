@@ -138,7 +138,7 @@ def rotate_polymer_head(
         polymer: Et 2D numpy array med monomer-koordinatene
 
         rotation_center: Hvilket monomer man skal rotere rundt.
-        Merk: Det er ikke indeks, men polymer nummeret [1, N]
+        Merk: Det er ikke indeks, men polymer nummeret. [1, N]
 
         positive_direction: Rotere i positiv retning. Hvis False roteres det i negativ retning.
 
@@ -157,3 +157,7 @@ def rotate_polymer_head(
     new_polymer = polymer[:]
     new_polymer[:rotation_center] = rotation_position + new_pos_rel[:, ::-1]
     return new_polymer
+
+
+def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
+    pass
