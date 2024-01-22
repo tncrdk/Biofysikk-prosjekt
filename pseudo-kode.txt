@@ -1,5 +1,5 @@
 def illustrate(polymer)
--Oskar
+-Oskar (DONE)
 
 def check_if_intact(polymer)
 -Vemund (DONE)

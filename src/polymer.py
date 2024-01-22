@@ -35,6 +35,9 @@ def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
         distance = (polymer[i - 1, 0] - polymer[i, 0]) ** 2 + (
             polymer[i - 1, 1] - polymer[i, 1]
         ) ** 2  ## Trenger ikke kvadratrot fordi alt annet enn 1 som verdi er ikke intakt(også raskere)
+        distance = (polymer[i - 1, 0] - polymer[i, 0]) ** 2 + (
+            polymer[i - 1, 1] - polymer[i, 1]
+        ) ** 2  ## Trenger ikke kvadratrot fordi alt annet enn 1 som verdi er ikke intakt(også raskere)
         if distance != 1:
             return False
     return True
@@ -157,6 +160,28 @@ def rotate_polymer_head(
     new_polymer = polymer[:]
     new_polymer[:rotation_center] = rotation_position + new_pos_rel[:, ::-1]
     return new_polymer
+
+
+def generate_flat_polymer(
+    polymer_length: int, mid_of_polymer: np.ndarray = np.zeros(2)
+) -> np.ndarray:
+    """Genererer en horisontal polymer med N monomerer
+
+    Args:
+        polymer_length (int): N antall monomerer
+        mid_of_polymer (np.ndarray, optional): Midtpunktet til polymeren, Defaults to np.zeros(2).
+
+    Returns:
+        np.ndarray: den genererte polymeren
+    """ """"""
+    polymer_array = np.zeros((polymer_length, 2))
+    polymer_start = -int(polymer_length / 2) + mid_of_polymer[0]
+    # + 1/2 for å håndtere partall
+    polymer_end = int((polymer_length + 1) / 2) + mid_of_polymer[0]
+    polymer_array[:, 1] = mid_of_polymer[1]
+    polymer_array[:, 0] = np.arange(polymer_start, polymer_end, 1)
+
+    return polymer_array
 
 
 def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
