@@ -179,4 +179,5 @@ def generate_flat_polymer(
     return polymer_array
 
 
-print(generate_flat_polymer(3))
+if __name__ == "__main__":
+    print(generate_flat_polymer(3))
