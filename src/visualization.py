@@ -32,16 +32,18 @@ def illustrate_polymer(
     Returns:
         None
     """
-    # Make a (2N+1)x(2N+1)-grid
-    N = len(polymer)
-    x = np.arange(-N, N + 2, 1)
-    y = np.arange(-N, N + 2, 1)
-    Z = np.zeros((2 * N + 1, 2 * N + 1))
+    # Make a NxN-grid
+    min_x, min_y = np.min(polymer, axis=0)
+    max_x, max_y = np.max(polymer, axis=0)
+    N = max(max_y - min_y, max_x - min_x) + 1
+    x = np.arange(N + 1)
+    y = np.arange(N + 1)
+    Z = np.zeros((N, N))
 
     # Generate a color gradient by assigning an integer to every monomer
     i = 1
     for monomer in polymer:
-        Z[monomer[1] + N, monomer[0] + N] = i
+        Z[monomer[1] - min_y, monomer[0] - min_x] = i
         i += 1
 
     fig, ax = plt.subplots()

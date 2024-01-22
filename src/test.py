@@ -3,11 +3,16 @@ import visualization
 import numpy as np
 
 
+"""
+Tests for polymer.py
+"""
+
+
 def test_generate_flat_polymer():
     """simple test for generate_flat_polymer"""
-    expected_result = np.array([[-1, 0], [0, 0], [1, 0]])
+    expected_result = np.array([[-1, 0], [0, 0], [1, 0]], dtype=np.int)
     res = polymer.generate_flat_polymer(3)
-    assert not np.all(
+    assert np.all(
         np.equal(res, expected_result)
     ), f"Expected\n\t{expected_result}\nGot\n\t{res}"
 
@@ -37,18 +42,56 @@ def test_check_if_intact_explicit():
     a = np.array([[-1, -4], [0, -1], [-3, 0]])
     b = np.array([[-3, -5], [-2, -1], [-1, 3]])
     c = np.array([[3, -4], [-1, 0], [-5, -4]])
+    c = np.array([[3, -4], [-1, 0], [-5, -4]])
     d = [a, b, c]
     for i in d:
         print(f"check_if_intact gir {polymer.check_if_intact(i, len(i))}")
         print(f"check_if_intact2 gir {polymer.check_if_intact_2(i, len(i))}")
 
 
+def test_rotate_polymer():
+    """does some rotations and prints the result"""
+    a = np.array([[i, 0] for i in range(15)])
+    visualization.illustrate_polymer(a)
+    a = polymer.rotate_polymer(a, 9)
+    visualization.illustrate_polymer(a)
+    a = polymer.rotate_polymer(a, 7, False)
+    visualization.illustrate_polymer(a)
+    a = polymer.rotate_polymer(a, 10, False)
+    visualization.illustrate_polymer(a)
+
+
+"""
+Tests for visualization.py
+"""
+
+
+def test_visualization():
+    """simple function for visualizing some polymers"""
+    a = np.array([[0, 0], [1, 0], [2, 0], [3, 0]])
+    b = np.array([[0, 0], [0, 1], [0, 2], [0, 3]])
+    c = np.array([[0, 0], [-1, 0], [-2, 0], [-3, 0]])
+    d = np.array([[0, 0], [0, -1], [0, -2], [0, -3]])
+    e = np.array([[1, 0], [2, 0], [3, 0]])
+    f = np.array([[0, 1], [0, 2], [0, 3]])
+    g = np.array([[-1, 0], [-2, 0], [-3, 0]])
+    h = np.array([[0, -1], [0, -2], [0, -3]])
+    m = np.array([[12, 13], [15, 16]])
+    polymers_to_test = [m, a, b, c, d, e, f, g, h]
+
+    for p in polymers_to_test:
+        print(p)
+        visualization.illustrate_polymer(p, title=str(p))
+
+
 if __name__ == "__main__":
     tests = [
-        test_generate_flat_polymer,
-        test_check_if_intact2,
-        test_check_if_intact,
-        test_check_if_intact_explicit,
+        # test_generate_flat_polymer,
+        # test_check_if_intact2,
+        # test_check_if_intact,
+        # test_check_if_intact_explicit,
+        # test_visualization
+        test_rotate_polymer
     ]
 
     for i, test in enumerate(tests):

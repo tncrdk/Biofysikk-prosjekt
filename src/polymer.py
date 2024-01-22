@@ -26,11 +26,8 @@ def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
     Returns:
         bool: True hvis polymeren er intakt
     """
-
-    if (
-        np.size(polymer, axis=0) != polymer_length
-    ):  # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
-        return False
+    if np.size(np.unique(polymer, axis=0), axis=0) != polymer_length:
+        return False  # Sjekker både at den har N monomerer og at de alle har en unik heltallsrepresentasjon
 
     for i in range(1, polymer_length):
         distance = (polymer[i - 1, 0] - polymer[i, 0]) ** 2 + (
@@ -55,19 +52,17 @@ def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
         bool: True hvis polymeren er intakt
     """
 
-    if (
-        np.size(polymer, axis=0) != polymer_length
-    ):  # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
-        return False
+    if np.size(np.unique(polymer, axis=0), axis=0) != polymer_length:
+        return False  # Sjekker både at den har N monomerer og at de alle har en unik heltallsrepresentasjon
 
     test = polymer[1:]
     test_mot = polymer[:-1]
     distance_array = (test[:, 0] - test_mot[:, 0]) ** 2 + (
         test[:, 1] - test_mot[:, 1]
     ) ** 2  ## Trenger ikke kvadratrot fordi alt annet enn 1 som verdi er ikke intakt(også raskere)
-    if (
-        len(set(distance_array)) != 1
-    ):  ## Hvis distance_array inneholder noe annet enn 1 er ikke polymer intakt; Kan bli raskere???
+    if np.any(
+        distance_array != 1
+    ):  ## Hvis distance_array inneholder noe annet enn 1 er ikke polymer intakt
         return False
     return True
 
@@ -175,12 +170,12 @@ def generate_flat_polymer(
     Returns:
         np.ndarray: den genererte polymeren
     """
-    polymer_array = np.zeros((polymer_length, 2))
+    polymer_array = np.zeros((polymer_length, 2), dtype=np.int32)
     polymer_start = -int(polymer_length / 2) + mid_of_polymer[0]
     # + 1/2 for å håndtere partall
     polymer_end = int((polymer_length + 1) / 2) + mid_of_polymer[0]
     polymer_array[:, 1] = mid_of_polymer[1]
-    polymer_array[:, 0] = np.arange(polymer_start, polymer_end, 1)
+    polymer_array[:, 0] = np.arange(polymer_start, polymer_end, 1, dtype=np.int32)
 
     return polymer_array
 
@@ -194,3 +189,7 @@ def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> np.float32:
             if np.linalg.norm(polymer[i] - polymer[j]) == 1:
                 b_matrix[i, j] = 1
     return np.sum(V * b_matrix)
+
+
+if __name__ == "__main__":
+    print(generate_flat_polymer(3))
