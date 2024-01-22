@@ -31,7 +31,6 @@ def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
     ):  # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
         return False
 
-
     for i in range(1, polymer_length):
         distance = (polymer[i - 1, 0] - polymer[i, 0]) ** 2 + (
             polymer[i - 1, 1] - polymer[i, 1]
@@ -42,7 +41,6 @@ def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
         if distance != 1:
             return False
     return True
-
 
 
 def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
@@ -60,7 +58,6 @@ def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
         np.size(polymer, axis=0) != polymer_length
     ):  # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
         return False
-
 
     test = polymer[1:]
     test_mot = polymer[:-1]
@@ -163,6 +160,8 @@ def rotate_polymer_head(
     new_polymer = polymer[:]
     new_polymer[:rotation_center] = rotation_position + new_pos_rel[:, ::-1]
     return new_polymer
+
+
 def generate_flat_polymer(
     polymer_length: int, mid_of_polymer: np.ndarray = np.zeros(2)
 ) -> np.ndarray:
