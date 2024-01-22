@@ -31,7 +31,6 @@ def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
     ):  # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
         return False
 
-
     for i in range(1, polymer_length):
         distance = (polymer[i - 1, 0] - polymer[i, 0]) ** 2 + (
             polymer[i - 1, 1] - polymer[i, 1]
@@ -42,7 +41,6 @@ def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
         if distance != 1:
             return False
     return True
-
 
 
 def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
@@ -61,15 +59,14 @@ def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
     ):  # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
         return False
 
-
     test = polymer[1:]
     test_mot = polymer[:-1]
     distance_array = (test[:, 0] - test_mot[:, 0]) ** 2 + (
         test[:, 1] - test_mot[:, 1]
     ) ** 2  ## Trenger ikke kvadratrot fordi alt annet enn 1 som verdi er ikke intakt(også raskere)
-    if (
-        len(set(distance_array)) != 1
-    ):  ## Hvis distance_array inneholder noe annet enn 1 er ikke polymer intakt; Kan bli raskere???
+    if np.any(
+        distance_array != 1
+    ):  ## Hvis distance_array inneholder noe annet enn 1 er ikke polymer intakt
         return False
     return True
 
@@ -91,7 +88,9 @@ def rotate_polymer(
         en rotert kopi av polymeret
     """
 
-    if rotation_center >= len(polymer) / 2:
+    if (
+        rotation_center >= len(polymer) / 2
+    ):  # Velger å rotere den delen av polymeret som er kortest
         return rotate_polymer_tail(polymer, rotation_center, positive_direction)
     else:
         return rotate_polymer_head(polymer, rotation_center, positive_direction)
@@ -118,9 +117,16 @@ def rotate_polymer_tail(
     else:
         direction = -1
 
+    # Rotasjonssentrum sine koordinater
     rotation_position = polymer[rotation_center - 1]
+
+    # new_x = x_s + x_rel
+    # x_rel = - (y - y_s) * direction
+    # new_y = y_s + y_rel
+    # y_rel = (x - x_s) * direction
     new_pos_rel = (polymer[rotation_center:] - rotation_position) * direction
     new_pos_rel[:, 1] *= -1
+    # Lager kopi av polymeret
     new_polymer = polymer[:]
     new_polymer[rotation_center:] = rotation_position + new_pos_rel[:, ::-1]
     return new_polymer
@@ -142,6 +148,7 @@ def rotate_polymer_head(
     Returns:
         en rotert kopi av polymeret
     """
+    # For kommentarer se rotate_polymer_tail
     if positive_direction:
         direction = 1
     else:
@@ -153,6 +160,8 @@ def rotate_polymer_head(
     new_polymer = polymer[:]
     new_polymer[:rotation_center] = rotation_position + new_pos_rel[:, ::-1]
     return new_polymer
+
+
 def generate_flat_polymer(
     polymer_length: int, mid_of_polymer: np.ndarray = np.zeros(2)
 ) -> np.ndarray:
@@ -165,12 +174,12 @@ def generate_flat_polymer(
     Returns:
         np.ndarray: den genererte polymeren
     """ """"""
-    polymer_array = np.zeros((polymer_length, 2))
+    polymer_array = np.zeros((polymer_length, 2), dtype = np.int32)
     polymer_start = -int(polymer_length / 2) + mid_of_polymer[0]
     # + 1/2 for å håndtere partall
     polymer_end = int((polymer_length + 1) / 2) + mid_of_polymer[0]
     polymer_array[:, 1] = mid_of_polymer[1]
-    polymer_array[:, 0] = np.arange(polymer_start, polymer_end, 1)
+    polymer_array[:, 0] = np.arange(polymer_start, polymer_end, 1, dtype = np.int32)
 
     return polymer_array
 
