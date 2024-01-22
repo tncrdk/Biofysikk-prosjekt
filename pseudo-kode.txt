@@ -8,6 +8,7 @@ def rotate_sub_polymer(polymer)
 -Thorbjørn (DONE)
 
 def calculate_energy(polymer)
+-Thorbjørn
 
 def try_rotate_N_times(polymer_size)
 
