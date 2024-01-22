@@ -15,7 +15,7 @@ def try_rotate_N_times(polymer_size)
 def plot_prosent_gyldige_rotasjoner()
 
 def generate_flat_polymer()
-
+-Vemund
 
 1h) Prøv å roter polymer, og hvis det ikke går roter tilbake. Istedet for kopi
 

@@ -2,7 +2,6 @@ import numpy as np
 import time
 
 
-test_polymer = np.array([[0,1], [0,2], [1,2], [1,1], [0, 1]])
 def check_if_intact(polymer:np.ndarray, polymer_length:int) -> bool:
     """Sjekker om en polymer er intakt
 
@@ -44,14 +43,4 @@ def check_if_intact_2(polymer:np.ndarray, polymer_length:int) -> bool:
         return False
     return True
 
-
-starttime = time.perf_counter()
-print(check_if_intact(test_polymer, 5))
-slutt_time = time.perf_counter() - starttime
-print(f"Funksjon 1: {slutt_time}")
-
-starttime = time.perf_counter()
-print(check_if_intact_2(test_polymer, 5))
-slutt_time = time.perf_counter() - starttime
-print(f"Funksjon 2: {slutt_time}")
 
