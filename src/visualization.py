@@ -14,20 +14,11 @@ def illustrate_polymer(
     Uses matplotlib.pyplot.pcolormesh to illustrate a polymer.
 
     Args:
-        polymer:
-            Nx2-dimensional array containing coordinates for the N monomers.
-
-        cmap:
-            matplotlib colormap
-
-        title:
-            Title
-
-        save_to_file:
-            Defaults to False.
-
-        filename:
-            if save_to_file is True filename has to be specified. Example: "test.png"
+        polymer: Nx2-dimensional array containing coordinates for the N monomers
+        cmap: matplotlib colormap
+        title: Title
+        save_to_file: Defaults to False
+        filename: if save_to_file is True filename has to be specified.
 
     Returns:
         None
