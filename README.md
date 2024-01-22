@@ -14,3 +14,5 @@ er der.
 ## Filstruktur
 
 `README.md`: Denne filen.
+
+`Pipfile**`: Virtual environment
