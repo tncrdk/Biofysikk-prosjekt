@@ -2,6 +2,19 @@ import numpy as np
 import time
 
 
+"""
+polymer: [ 
+          x1, y1
+          x2, y2
+          x3, y3
+          .
+          .
+          .
+          xN, yN
+          ]
+"""
+
+
 def check_if_intact(polymer:np.ndarray, polymer_length:int) -> bool:
     """Sjekker om en polymer er intakt
 
@@ -44,17 +57,7 @@ def check_if_intact_2(polymer:np.ndarray, polymer_length:int) -> bool:
     return True
 
 
-"""
-polymer: [ 
-          x1, y1
-          x2, y2
-          x3, y3
-          .
-          .
-          .
-          xN, yN
-          ]
-"""
+
 
 
 def rotate_polymer(
