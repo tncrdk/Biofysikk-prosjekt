@@ -1,5 +1,6 @@
 import numpy as np
 import time
+from numba import njit
 
 
 """
@@ -173,7 +174,7 @@ def generate_flat_polymer(
 
     Returns:
         np.ndarray: den genererte polymeren
-    """ """"""
+    """
     polymer_array = np.zeros((polymer_length, 2))
     polymer_start = -int(polymer_length / 2) + mid_of_polymer[0]
     # + 1/2 for å håndtere partall
@@ -184,5 +185,12 @@ def generate_flat_polymer(
     return polymer_array
 
 
-def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
-    pass
+@njit
+def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> np.float32:
+    N = len(polymer)
+    b_matrix = np.zeros((N, N))
+    for i in range(len(polymer)):
+        for j in range(i + 2, len(polymer)):
+            if np.linalg.norm(polymer[i] - polymer[j]) == 1:
+                b_matrix[i, j] = 1
+    return np.sum(V * b_matrix)
