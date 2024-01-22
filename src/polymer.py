@@ -1,5 +1,4 @@
 import numpy as np
-import time
 
 
 def check_if_intact(polymer:np.ndarray, polymer_length:int) -> bool:
@@ -44,3 +43,18 @@ def check_if_intact_2(polymer:np.ndarray, polymer_length:int) -> bool:
     return True
 
 
+
+def generate_flat(polymer_length:int, mid_of_polymer:np.ndarray = np.zeros(2)) -> np.ndarray:
+    print(mid_of_polymer)
+    polymer_array = np.zeros((polymer_length, 2))
+    polymer_start = -int(polymer_length / 2) + mid_of_polymer[0]
+    polymer_end = int(polymer_length / 2) + mid_of_polymer[0]
+    array_vals = mid_of_polymer[1]
+    polymer_array[:,1] = arra_
+    polymer_array[:,0] = np.arange(polymer_start, polymer_end, 1)
+
+    print(polymer_array)
+    print(np.shape(polymer_array))
+
+
+generate_flat(7)
