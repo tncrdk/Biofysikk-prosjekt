@@ -85,7 +85,9 @@ def rotate_polymer(
         en rotert kopi av polymeret
     """
 
-    if rotation_center >= len(polymer) / 2:
+    if (
+        rotation_center >= len(polymer) / 2
+    ):  # Velger å rotere den delen av polymeret som er kortest
         return rotate_polymer_tail(polymer, rotation_center, positive_direction)
     else:
         return rotate_polymer_head(polymer, rotation_center, positive_direction)
@@ -112,9 +114,16 @@ def rotate_polymer_tail(
     else:
         direction = -1
 
+    # Rotasjonssentrum sine koordinater
     rotation_position = polymer[rotation_center - 1]
+
+    # new_x = x_s + x_rel
+    # x_rel = - (y - y_s) * direction
+    # new_y = y_s + y_rel
+    # y_rel = (x - x_s) * direction
     new_pos_rel = (polymer[rotation_center:] - rotation_position) * direction
     new_pos_rel[:, 1] *= -1
+    # Lager kopi av polymeret
     new_polymer = polymer[:]
     new_polymer[rotation_center:] = rotation_position + new_pos_rel[:, ::-1]
     return new_polymer
@@ -136,6 +145,7 @@ def rotate_polymer_head(
     Returns:
         en rotert kopi av polymeret
     """
+    # For kommentarer se rotate_polymer_tail
     if positive_direction:
         direction = 1
     else:
