@@ -25,11 +25,7 @@ def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
     Returns:
         bool: True hvis polymeren er intakt
     """
-    """
 
-    if (
-        np.size(polymer, axis=0) != polymer_length
-    ):  # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
     if (
         np.size(polymer, axis=0) != polymer_length
     ):  # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
@@ -48,7 +44,6 @@ def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
     return True
 
 
-def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
 
 def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
     """Sjekker om en polymer er intakt
@@ -60,11 +55,7 @@ def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
     Returns:
         bool: True hvis polymeren er intakt
     """
-    """
 
-    if (
-        np.size(polymer, axis=0) != polymer_length
-    ):  # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
     if (
         np.size(polymer, axis=0) != polymer_length
     ):  # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
