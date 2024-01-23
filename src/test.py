@@ -110,6 +110,14 @@ def test_visualization():
         visualization.illustrate_polymer(p, title=str(p))
 
 
+"""
+Tester for simulation.py
+"""
+
+def test_metropolis():
+    pass
+
+
 if __name__ == "__main__":
     tests = [
         # test_generate_flat_polymer,
@@ -117,8 +125,9 @@ if __name__ == "__main__":
         # test_check_if_intact,
         # test_check_if_intact_explicit,
         # test_visualization
-        test_rotate_polymer
+        # test_rotate_polymer
         # test_calculate_energy
+        test_metropolis
     ]
 
     for i, test in enumerate(tests):
