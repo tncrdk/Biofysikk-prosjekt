@@ -180,14 +180,14 @@ def generate_flat_polymer(
     return polymer_array
 
 
-@njit
+@njit()
 def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> np.float32:
     N = len(polymer)
     b_matrix = np.zeros((N, N))
-    for i in range(len(polymer)):
-        for j in range(i + 2, len(polymer)):
-            if np.linalg.norm(polymer[i] - polymer[j]) == 1:
-                b_matrix[i, j] = 1
+    for i in range(0, N):
+        for j in range(i + 2, N):
+            if np.sum((polymer[i] - polymer[j])**2) == 1:
+                b_matrix[j, i] = 1  # Trenger bare fylle den nedre trekanten av matrisen.
     return np.sum(V * b_matrix)
 
 
