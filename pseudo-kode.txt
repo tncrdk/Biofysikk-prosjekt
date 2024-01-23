@@ -22,6 +22,7 @@ def generate_flat_polymer()
 
 Oppg. 2
 def metropolis(polymer, V, N_s, temp)
+-Thorbjørn
 
 def plot_energy_from_N_carlo_steps()
 -- more plotting stuff
