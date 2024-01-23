@@ -59,6 +59,12 @@ def test_rotate_polymer():
     visualization.illustrate_polymer(a)
     a = polymer.rotate_polymer(a, 10, False)
     visualization.illustrate_polymer(a)
+    a = polymer.rotate_polymer(a, 3, False)
+    visualization.illustrate_polymer(a)
+    a = polymer.rotate_polymer(a, 4, False)
+    visualization.illustrate_polymer(a)
+    a = polymer.rotate_polymer(a, 5)
+    visualization.illustrate_polymer(a)
 
 
 def test_calculate_energy():
@@ -111,8 +117,8 @@ if __name__ == "__main__":
         # test_check_if_intact,
         # test_check_if_intact_explicit,
         # test_visualization
-        # test_rotate_polymer
-        test_calculate_energy
+        test_rotate_polymer
+        # test_calculate_energy
     ]
 
     for i, test in enumerate(tests):
