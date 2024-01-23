@@ -4,10 +4,11 @@ from typing import Callable
 import polymer
 
 
-def benchmark(iterations: int = 10, setup_func=lambda x: None, warmup = 1) -> Callable:
+def benchmark(iterations: int = 10, setup_func=lambda x: None, warmup=1) -> Callable:
     def decorator(func):
         if setup_func is None:
             _ = [func() for _ in range(warmup)]
+
             def none_wrapper():
                 stime = perf_counter()
                 results = [0] * iterations
@@ -20,6 +21,7 @@ def benchmark(iterations: int = 10, setup_func=lambda x: None, warmup = 1) -> Ca
             return none_wrapper
         else:
             _ = [func(*setup_func()) for _ in range(warmup)]
+
             def wrapper():
                 init_setup = setup_func()
                 stime = perf_counter()

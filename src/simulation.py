@@ -47,9 +47,10 @@ def metropolis(
         (Siste polymer , array med alle energiene som ble simulert)
     """
     E_array = np.zeros(N_s)
+    N = len(pol)
     E = polymer.calculate_energy(pol, V)
-    i = 1
-    while i < N_s:
+    i = 0
+    while i < N_s - 1:
         # random monomer and random twisting direction
         rnd_monomer = np.random.randint(2, N)
         rnd_rotate = bool(int(np.random.uniform() + 0.5))
