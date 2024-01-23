@@ -10,7 +10,7 @@ Tests for polymer.py
 
 def test_generate_flat_polymer():
     """simple test for generate_flat_polymer"""
-    expected_result = np.array([[-1, 0], [0, 0], [1, 0]], dtype=np.int)
+    expected_result = np.array([[-1, 0], [0, 0], [1, 0]], dtype=np.int32)
     res = polymer.generate_flat_polymer(3)
     assert np.all(
         np.equal(res, expected_result)
@@ -61,6 +61,26 @@ def test_rotate_polymer():
     visualization.illustrate_polymer(a)
 
 
+def test_calculate_energy():
+    V = np.array(
+        [
+            [0, 0, 1, 1, 1, 1],
+            [0, 0, 0, 1, 1, 1],
+            [1, 0, 0, 0, 1, 1],
+            [1, 1, 0, 0, 0, 1],
+            [1, 1, 1, 0, 0, 0],
+            [1, 1, 1, 1, 0, 0],
+        ]
+    )
+    a = polymer.generate_flat_polymer(6)
+    E = polymer.calculate_energy(a, V)
+    print(E)
+    b = np.array([[0, 0], [1, 0], [1, 1], [0, 1], [-1, 1], [-2, 1]])
+    E = polymer.calculate_energy(b, V)
+    print(E)
+
+
+
 """
 Tests for visualization.py
 """
@@ -91,7 +111,8 @@ if __name__ == "__main__":
         # test_check_if_intact,
         # test_check_if_intact_explicit,
         # test_visualization
-        test_rotate_polymer
+        # test_rotate_polymer
+        test_calculate_energy
     ]
 
     for i, test in enumerate(tests):
