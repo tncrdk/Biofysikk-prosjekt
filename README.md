@@ -13,9 +13,14 @@ er der.
 
 ## Filstruktur
 
-`README.md`: Denne filen.
+`src/`: kode
+
+`README.md`: Denne filen
+
+`Aakre_Djupvik_Jakobsen.ipynb`: notebook til innlevering
 
 `Pipfile**`: Virtual environment
+
 
 ## Potensielle kilder
 

@@ -1,5 +1,5 @@
 def illustrate(polymer)
--Oskar (DONE)
+-Oskar
 
 def check_if_intact(polymer)
 -Vemund (DONE)
@@ -8,9 +8,10 @@ def rotate_sub_polymer(polymer)
 -Thorbjørn (DONE)
 
 def calculate_energy(polymer)
--Thorbjørn
+-Thorbjørn (DONE: kan forbedres ved behov)
 
 def try_rotate_N_times(polymer_size)
+-Oskar
 
 def plot_prosent_gyldige_rotasjoner()
 

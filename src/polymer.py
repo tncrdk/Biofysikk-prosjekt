@@ -122,8 +122,12 @@ def rotate_polymer_tail(
     # y_rel = (x - x_s) * direction
     new_pos_rel = (polymer[rotation_center:] - rotation_position) * direction
     new_pos_rel[:, 1] *= -1
+
     # Lager kopi av polymeret
-    new_polymer = polymer[:]
+    # om lettere å mutere for så å mutere tilbake igjen
+    # new_polymer = polymer[:]
+    new_polymer = polymer.copy()
+
     new_polymer[rotation_center:] = rotation_position + new_pos_rel[:, ::-1]
     return new_polymer
 
@@ -153,7 +157,11 @@ def rotate_polymer_head(
     rotation_position = polymer[rotation_center - 1]
     new_pos_rel = (polymer[:rotation_center] - rotation_position) * direction
     new_pos_rel[:, 1] *= -1
-    new_polymer = polymer[:]
+
+    # om lettere å mutere for så å mutere tilbake igjen
+    # new_polymer = polymer[:]
+    new_polymer = polymer.copy()
+
     new_polymer[:rotation_center] = rotation_position + new_pos_rel[:, ::-1]
     return new_polymer
 
