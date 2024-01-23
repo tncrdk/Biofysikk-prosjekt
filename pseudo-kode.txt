@@ -16,7 +16,7 @@ def try_rotate_N_times(polymer_size)
 def plot_prosent_gyldige_rotasjoner()
 
 def generate_flat_polymer()
--Vemund
+-Vemund (DONE)
 
 1h) Prøv å roter polymer, og hvis det ikke går roter tilbake. Istedet for kopi
 
@@ -28,5 +28,5 @@ def plot_energy_from_N_carlo_steps()
 -- more plotting stuff
 
 def get_max_distance(polymer) # se sources
-
+--Vemund
 
