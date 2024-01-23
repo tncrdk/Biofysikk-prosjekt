@@ -39,9 +39,9 @@ def illustrate_polymer(
         shiftx = (1 if N % 2 == 0 and middle_monomer[0] < 0 else 0)
         x_coord = monomer[1] + int(N / 2) - middle_monomer[1] - shifty
         y_coord = monomer[0] + int(N / 2) - middle_monomer[0] - shiftx
-        Z[y_coord, x_coord] = i + 2
+        Z[x_coord, y_coord] = i + 2
         if numbers:
-            ax.text(x_coord + 0.5, y_coord + 0.5, i + 1, size="x-large", color='red')
+            ax.text(y_coord + 0.5, x_coord + 0.5, i + 1, size="x-large", color='red')
 
     ax.pcolormesh(x, y, Z, shading="flat", cmap=cmap)
     ax.set(title=title, xticks=x, xticklabels=[], yticks=y, yticklabels=[])
@@ -56,5 +56,5 @@ def illustrate_polymer(
 
 
 if __name__ == "__main__":
-    a = np.array([[0, 0], [0, 1], [0, 2]])
-    illustrate_polymer(a, numbers=True)
+    a = np.array([[0, 0], [0, 1], [1, 1]])
+    illustrate_polymer(a, numbers=True, title=str(a))
