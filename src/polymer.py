@@ -1,7 +1,7 @@
 import numpy as np
 import time
 from numba import njit
-
+import utilities
 
 """
 polymer: [ 
@@ -220,31 +220,63 @@ def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
     return float(np.sum(V * b_matrix))
 
 
-def gen_V_matrix(size: int, fill_value: float = -1.0) -> np.ndarray:
-    """
-    With fill_value = -1 ge_V_matrix generates a size*size matrix:
-         0  0 -1 -1 ... -1 -1 -1
-         0  0  0 -1 ... -1 -1 -1
-        -1  0  0  0 ... -1 -1 -1
-        .          .           .
-        .            .         .
-        .              .       .
-        -1 -1 -1 -1 ...  0  0  0
-        -1 -1 -1 -1 ... -1  0  0
+@njit
+def calculate_energy_2(polymer: np.ndarray, V: np.ndarray) -> float:
+    """idk... think it works. maybe. see Oskar's notebook for details lol."""
+    N = len(polymer)
+    L = np.repeat(polymer, N).reshape(2*N,N)
+    b = np.where(
+        ((L[::2] - L[::2].transpose())**2 + (L[1::2] - L[1::2].transpose())**2) == 1,
+        1, 0
+    )
+    return 0.5*(np.sum(V*b))
 
-    Args:
-        size: size of array
-        fill_value: float
+@njit
+def calculate_energy_3(polymer: np.ndarray, V: np.ndarray) -> float:
+    """idk... think it works. maybe. see Oskar's notebook for details lol."""
+    N = len(polymer)
+    L = np.repeat(polymer, N).reshape(2*N,N)
 
-    Returns:
-        the matrix
-    """
-    V = np.full((size, size), fill_value)
-    np.fill_diagonal(V, 0)
-    np.fill_diagonal(V[:-1, 1:], 0)
-    np.fill_diagonal(V[1:, :-1], 0)
-    return V
+    def is_neighbor(L):
+        return np.abs(L[::2] - L[::2].transpose()) + np.abs(L[1::2] - L[1::2].transpose()) == 1
+    
+    b = np.where( is_neighbor(L), 1, 0)
+    return 0.5*(np.sum(V*b))
 
 
 if __name__ == "__main__":
-    print(gen_V_matrix(20))
+    pol = np.array(
+        [
+            [-2, 0],
+            [-1, 0],
+            [0, 0],
+            [1, 0],
+            [1, -1],
+            [0, -1],
+            [-1, -1],
+        ]
+    )
+
+    # dette er ikkje eit lovleg polymer.
+    pol2 = np.array(
+        [
+            [0, 0],
+            [1, 0],
+            [1, 1],
+            [0, 1],
+            [-1, 1],
+            [-2, 1],
+            [-2, 0],
+            [-1, 0],
+            [-2, -1],
+            [-2, -2],
+            [-2, -3],
+        ]
+    )
+    
+    V = utilities.gen_V_matrix(7)
+    V2 = utilities.gen_V_matrix(11, fill_value=1)
+    print(calculate_energy_3(pol, V))
+    print(calculate_energy_3(pol2, V2))
+    print(calculate_energy_2(pol2, V2))
+
