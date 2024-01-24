@@ -77,8 +77,24 @@ def bench_calculate_energy(a: np.ndarray, V: np.ndarray):
     return polymer.calculate_energy(a, V)
 
 
+@benchmark(iterations=1000, setup_func=calculate_energy_setup, warmup=1)
+def bench_calculate_energy_2(a: np.ndarray, V: np.ndarray):
+    return polymer.calculate_energy_2(a, V)
+
+@benchmark(iterations=1000, setup_func=calculate_energy_setup, warmup=1)
+def bench_calculate_energy_3(a: np.ndarray, V: np.ndarray):
+    return polymer.calculate_energy_3(a, V)
+
 if __name__ == "__main__":
-    benchmarks = [bench_calculate_energy]
-    for b in benchmarks:
-        time, results = b()
-        print(time)
+    time1, results1 = bench_calculate_energy()
+    time2, results2 = bench_calculate_energy_2()
+    time3, results3 = bench_calculate_energy_3()
+
+    print(f"func: bench_calculate_energy\ntime: {time1:>10.5e}\nresults[0]: {results1[0]}\n")
+    print(f"func: bench_calculate_energy2\ntime: {time2:>10.5e}\nresults[0]: {results2[0]}\n")
+    print(f"func: bench_calculate_energy3\ntime: {time3:>10.5e}\nresults[0]: {results3[0]}\n")
+
+    # benchmarks = [bench_calculate_energy]
+    # for b in benchmarks:
+    #     time, results = b()
+    #     print(f"function:{b.__name__}\ntime: {time:>10.5e}")
