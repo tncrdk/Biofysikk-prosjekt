@@ -1,6 +1,7 @@
 import polymer
 import visualization
 import numpy as np
+import simulation
 
 
 """
@@ -86,7 +87,6 @@ def test_calculate_energy():
     print(E)
 
 
-
 """
 Tests for visualization.py
 """
@@ -110,6 +110,35 @@ def test_visualization():
         visualization.illustrate_polymer(p, title=str(p))
 
 
+"""
+Tester for simulation.py
+"""
+
+
+def test_metropolis():
+    V = np.array(
+        [
+            [0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+            [0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1],
+            [-1, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1],
+            [-1, -1, 0, 0, 0, -1, -1, -1, -1, -1, -1],
+            [-1, -1, -1, 0, 0, 0, -1, -1, -1, -1, -1],
+            [-1, -1, -1, -1, 0, 0, 0, -1, -1, -1, -1],
+            [-1, -1, -1, -1, -1, 0, 0, 0, -1, -1, -1],
+            [-1, -1, -1, -1, -1, -1, 0, 0, 0, -1, -1],
+            [-1, -1, -1, -1, -1, -1, -1, 0, 0, 0, -1],
+            [-1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0],
+            [-1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0],
+        ]
+    )
+    T = 1000
+    pol = polymer.generate_flat_polymer(11)
+    N_s = 1000
+    pol, E_array = simulation.metropolis(pol, N_s, V, T)
+    visualization.illustrate_polymer(pol, numbers=True)
+    print(E_array)
+
+
 if __name__ == "__main__":
     tests = [
         # test_generate_flat_polymer,
@@ -117,8 +146,9 @@ if __name__ == "__main__":
         # test_check_if_intact,
         # test_check_if_intact_explicit,
         # test_visualization
-        test_rotate_polymer
+        # test_rotate_polymer
         # test_calculate_energy
+        test_metropolis
     ]
 
     for i, test in enumerate(tests):

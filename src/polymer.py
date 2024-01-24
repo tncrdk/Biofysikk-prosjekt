@@ -191,7 +191,7 @@ def generate_flat_polymer(
 
 # Funksjonen kan, (og bør?), JIT-kompileres av numba
 @njit()
-def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> np.float32:
+def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
     """Regner ut energien til et gitt polymer.
 
     Args:
@@ -217,7 +217,7 @@ def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> np.float32:
                 b_matrix[j, i] = 1
     # Trenger ikke dele på 2 siden vi bare fyller ut den nedre trekanten av b_matrix;
     # vi dobbelteller ikke.
-    return np.sum(V * b_matrix)
+    return float(np.sum(V * b_matrix))
 
 
 def gen_V_matrix(size: int, fill_value: float = -1.0) -> np.ndarray:
