@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.spatial.distance import cdist
 
 def gen_V_matrix(size: int, fill_value: float = -1.0) -> np.ndarray:
     """
@@ -24,3 +25,15 @@ def gen_V_matrix(size: int, fill_value: float = -1.0) -> np.ndarray:
     np.fill_diagonal(V[:-1, 1:], 0)
     np.fill_diagonal(V[1:, :-1], 0)
     return V
+
+
+def calculate_diameter(polymer:np.ndarray) -> float:
+    """Finner diameteren til polymeret
+
+    Args:
+        polymer (np.ndarray): polymeret som skal sjekkes
+
+    Returns:
+        float: diameteren
+    """
+    return np.max(cdist(polymer, polymer))
