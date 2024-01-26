@@ -40,17 +40,20 @@ def calculate_diameter_5(polymer:np.ndarray) -> float:
     return np.max(fastdist.matrix_pairwise_distance(polymer, fastdist.euclidean, "euclidean"))
 
 
-#a = np.random.randint(0, 35, (35, 2))
-# start = time.time()
-# print(calculate_diameter(a))
-# end = time.time()
-# print(end - start)
+def calculate_diameter_6(polymer:np.ndarray) -> float:
+    return np.max(np.sqrt((polymer[::2] - polymer[::2].transpose())**2 + (polymer[1::2] - polymer[1::2].transpose())**2))
+
+a = np.random.randint(0, 35, (35, 2))
+start = time.time()
+print(calculate_diameter(a))
+end = time.time()
+print(end - start)
 
     
-# b = polymer.generate_flat_polymer(35)
-# start_b = time.time()
-# print(calculate_diameter_2(a))
-# end_b = time.time()
+b = polymer.generate_flat_polymer(35)
+start_b = time.time()
+print(calculate_diameter_6(a))
+end_b = time.time()
 
 # print(end_b - start_b)
 
@@ -60,13 +63,13 @@ def calculate_diameter_5(polymer:np.ndarray) -> float:
 
 # print(end_c - start_c)
 
-def calculate_diameter_setup():
-    out = np.array(np.random.randint(0, 35, (35,2)))
-    return (out, )
+# def calculate_diameter_setup():
+#     out = np.array(np.random.randint(0, 35, (35,2)))
+#     return (out, )
 
-@benchmarks.benchmark(iterations=1000, setup_func=calculate_diameter_setup, warmup=1)
-def bench_dia(polymer:np.ndarray):
-    return calculate_diameter_5(polymer)
+# @benchmarks.benchmark(iterations=1000, setup_func=calculate_diameter_setup, warmup=1)
+# def bench_dia(polymer:np.ndarray):
+#     return calculate_diameter_5(polymer)
 
 
-print(bench_dia()[0])
+# print(bench_dia()[0])
