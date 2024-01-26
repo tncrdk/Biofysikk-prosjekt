@@ -1,5 +1,5 @@
 def illustrate(polymer)
--Oskar
+-Oskar (DONE: endringer kan gjøres om det blir mer estetisk. legge til mulighet for side-by-side plots?)
 
 def check_if_intact(polymer)
 -Vemund (DONE)
@@ -11,7 +11,7 @@ def calculate_energy(polymer)
 -Thorbjørn (DONE: kan forbedres ved behov)
 
 def try_rotate_N_times(polymer_size)
--Oskar
+-Oskar (DONE)
 
 def plot_prosent_gyldige_rotasjoner()
 
