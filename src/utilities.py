@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial.distance import cdist
 
+
 def gen_V_matrix(size: int, fill_value: float = -1.0) -> np.ndarray:
     """
     With fill_value = -1 ge_V_matrix generates a size*size matrix:
@@ -27,13 +28,20 @@ def gen_V_matrix(size: int, fill_value: float = -1.0) -> np.ndarray:
     return V
 
 
-def calculate_diameter(polymer:np.ndarray) -> float:
-    """Finner diameteren til polymeret
+@njit  # TODO: Diameter kan kanskje regnes ut samtidig som energien, siden de deler store deler av koden
+def calculate_diameter(polymer: np.ndarray) -> float:
+    """Finner diameteren til et polymer
 
     Args:
-        polymer (np.ndarray): polymeret som skal sjekkes
+        polymer (np.ndarray): polymeren som diameter skal finnes
 
     Returns:
-        float: diameteren
+        float: diameteren tim polymeren
     """
-    return np.max(cdist(polymer, polymer))
+    N = len(polymer)
+    L = np.repeat(polymer, N).reshape(2 * N, N)
+    return np.sqrt(
+        np.max(
+            (L[::2] - L[::2].transpose()) ** 2 + (L[1::2] - L[1::2].transpose()) ** 2
+        )
+    )
