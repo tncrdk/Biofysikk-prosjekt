@@ -28,5 +28,6 @@ def plot_energy_from_N_carlo_steps()
 -- more plotting stuff
 
 def get_max_distance(polymer) # se sources
---Vemund
+--Vemund (DONE)
+
 
