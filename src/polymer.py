@@ -69,118 +69,68 @@ def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
 def rotate_polymer(
     polymer: np.ndarray, rotation_center: int, positive_direction: bool = True
 ) -> np.ndarray:
-    """Roterer et polymer rundt rotasjonssenteret i en gitt retning.
+    """Rotates a polymer in the given direction around a monomer
 
     Args:
-        polymer: Et 2D numpy array med monomer-koordinatene
+        polymer: A 2D numpy array with monomer coordinates
 
-        rotation_center: Hvilket monomer man skal rotere rundt.
-        Merk at det er ikke indeks, men polymer nummeret [1, N]
+        rotation_center: Which monomer to rotate around
+        `Note: It is not the index, but the monomer_number. [1, N]`
 
-        positive_direction: Rotere i positiv retning. Hvis False roteres det i negativ retning.
+        positive_direction: Rotate in the positive direction if True, or negative direction if False
 
     Returns:
-        en rotert kopi av polymeret
+        a rotated copy of the polymer
     """
+    # Make a slicing array to rotate the correct end of the polymer
+    rotation_slice = np.full(len(polymer), False)
 
-    if (
-        rotation_center >= len(polymer) / 2
-    ):  # Velger å rotere den delen av polymeret som er kortest
-        return rotate_polymer_tail(polymer, rotation_center, positive_direction)
+    # Choose to rotate the shortest tail of the polymer
+    if rotation_center >= len(polymer) / 2:
+        rotation_slice[rotation_center:] = True
     else:
-        return rotate_polymer_head(polymer, rotation_center, positive_direction)
+        rotation_slice[:rotation_center] = True
 
-
-def rotate_polymer_tail(
-    polymer: np.ndarray, rotation_center: int, positive_direction: bool
-) -> np.ndarray:
-    """Roterer halen til et polymer rundt rotasjonssenteret i en gitt retning
-
-    Args:
-        polymer: Et 2D numpy array med monomer-koordinatene
-
-        rotation_center: Hvilket monomer man skal rotere rundt.
-        Merk: Det er ikke indeks, men polymer nummeret [1, N]
-
-        positive_direction: Rotere i positiv retning. Hvis False roteres det i negativ retning.
-
-    Returns:
-        en rotert kopi av polymeret
-    """
     if positive_direction:
         direction = 1
     else:
         direction = -1
 
-    # Rotasjonssentrum sine koordinater
+    # The coordinates in space of the rotation center
     rotation_position = polymer[rotation_center - 1]
 
-    # Med _rel menes posisjonen relativt rotasjonssenteret
+    # Where _rel means the position relative to the rotation center
     # new_x = x_s + new_x_rel
     # new_y = y_s + new_y_rel
     # new_x_rel = - (y - y_s) * direction
     # new_y_rel = (x - x_s) * direction
-    new_pos_rel = ((polymer[rotation_center:] - rotation_position) * direction)[:, ::-1]
-    new_pos_rel[:, 0] *= -1  # Endrer fortegnet til x-ene
+    new_pos_rel = ((polymer[rotation_slice] - rotation_position) * direction)[:, ::-1]
+    new_pos_rel[:, 0] *= -1  # Changes the sign of the x-values
 
-    # Lager kopi av polymeret
-    # om lettere å mutere for så å mutere tilbake igjen
+    # Makes a copy of the polymer
+    # TODO: om lettere å mutere for så å mutere tilbake igjen
     # new_polymer = polymer[:]
     new_polymer = polymer.copy()
 
-    new_polymer[rotation_center:] = rotation_position + new_pos_rel
-    return new_polymer
-
-
-def rotate_polymer_head(
-    polymer: np.ndarray, rotation_center: int, positive_direction: bool
-) -> np.ndarray:
-    """Roterer halen til et polymer rundt rotasjonssenteret i en gitt retning
-
-    Args:
-        polymer: Et 2D numpy array med monomer-koordinatene
-
-        rotation_center: Hvilket monomer man skal rotere rundt.
-        Merk: Det er ikke indeks, men polymer nummeret. [1, N]
-
-        positive_direction: Rotere i positiv retning. Hvis False roteres det i negativ retning.
-
-    Returns:
-        en rotert kopi av polymeret
-    """
-    # For kommentarer se rotate_polymer_tail
-    if positive_direction:
-        direction = 1
-    else:
-        direction = -1
-
-    rotation_position = polymer[rotation_center - 1]
-    new_pos_rel = ((polymer[:rotation_center] - rotation_position) * direction)[:, ::-1]
-    new_pos_rel[:, 0] *= -1
-
-    # om lettere å mutere for så å mutere tilbake igjen
-    # new_polymer = polymer[:]
-    new_polymer = polymer.copy()
-
-    new_polymer[:rotation_center] = rotation_position + new_pos_rel
+    new_polymer[rotation_slice] = rotation_position + new_pos_rel
     return new_polymer
 
 
 def generate_flat_polymer(
     polymer_length: int, mid_of_polymer: np.ndarray = np.zeros(2)
 ) -> np.ndarray:
-    """Genererer en horisontal polymer med N monomerer
+    """Generates a horizontal polymer with N (polymer_length) monomers
 
     Args:
-        polymer_length (int): N antall monomerer
-        mid_of_polymer (np.ndarray, optional): Midtpunktet til polymeren, Defaults to np.zeros(2).
+        polymer_length (int): Number of monomers
+        mid_of_polymer (np.ndarray, optional): The coordinates of the center monomer. Defaults to np.zeros(2).
 
     Returns:
-        np.ndarray: den genererte polymeren
+        np.ndarray: the generated polymer
     """
     polymer_array = np.zeros((polymer_length, 2), dtype=np.int32)
     polymer_start = -int(polymer_length / 2) + mid_of_polymer[0]
-    # + 1/2 for å håndtere partall
+    # + 1/2 to handle even numbers
     polymer_end = int((polymer_length + 1) / 2) + mid_of_polymer[0]
     polymer_array[:, 1] = mid_of_polymer[1]
     polymer_array[:, 0] = np.arange(polymer_start, polymer_end, 1, dtype=np.int32)
@@ -188,34 +138,37 @@ def generate_flat_polymer(
     return polymer_array
 
 
-# Funksjonen kan, (og bør?), JIT-kompileres av numba
+# The function can, (and should?), be JIT-compiled by numba.
 @njit()
 def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
-    """Regner ut energien til et gitt polymer.
+    """Calculates the energy of the given polymer.
 
     Args:
-        polymer: et numpy-array med monomer-koordinatene til et gyldig polymer
+        polymer: A 2D numpy array with monomer coordinates
 
-        V: matrise med styrken på vekselvirkninger mellom monomerene.
-        V[i, j] = V[j, i] = styrken mellom monomer nummer (i+1) og (j+1)
+        V: A matrix with the strength of the interaction between monomers of the given polymer.
+        V[i, j] = V[j, i] = strength between monomer number (i+1) og (j+1)
 
     Returns:
-        Energien til hele polymeret
+        The energy of the polymer
     """
     N = len(polymer)
     # En matrise som angir om monomer (i+1) og (j+1) er naboer. b_matrix[i, j] = 1 dersom de er naboer.
+    # A matrix which tells if monomer (i+1) and (j+1) are neighbours. b_matrix[i, j] = 1 if they are, and 0 otherwise
     b_matrix = np.zeros((N, N))
     for i in range(0, N):
-        # Trenger kun å se på monomer-sammensetninger som ikke har blitt sjekket enda.
-        # Nabomonomeren er alltid en nabo uten vekselvirkning, så trenger ikke sjekke den.
+        # We only need to look at monomer combinations which we have not checked yet.
+        # The next monomer in the polymer does not interact with the given monomer, so we don't have to check it.
         for j in range(i + 2, N):
             # Kun nærmeste-nabo koordinater gir en euklidsk avstand på nøyaktig 1.
+            # Only "closest neighbour"-coordinates will give a euclidic distance of exactly one, so we dont have to take the square root
             if np.sum((polymer[i] - polymer[j]) ** 2) == 1:
                 # Trenger bare fylle den nedre trekanten av matrisen,
-                # siden den ellers ville vært symmetrisk. (Merk j>i)
+                # We only need to fill the lower triangle of the matrix, as it otherwise will just be symmetric.
+                # Note: j>i
                 b_matrix[j, i] = 1
-    # Trenger ikke dele på 2 siden vi bare fyller ut den nedre trekanten av b_matrix;
-    # vi dobbelteller ikke.
+    # Don't have to divide by two, because we only filled the lower triangle of the b_matrix.
+    # We don't count the same interaction twice
     return float(np.sum(V * b_matrix))
 
 
@@ -223,24 +176,30 @@ def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
 def calculate_energy_2(polymer: np.ndarray, V: np.ndarray) -> float:
     """idk... think it works. maybe. see Oskar's notebook for details lol."""
     N = len(polymer)
-    L = np.repeat(polymer, N).reshape(2*N,N)
+    L = np.repeat(polymer, N).reshape(2 * N, N)
     b = np.where(
-        ((L[::2] - L[::2].transpose())**2 + (L[1::2] - L[1::2].transpose())**2) == 1,
-        1, 0
+        ((L[::2] - L[::2].transpose()) ** 2 + (L[1::2] - L[1::2].transpose()) ** 2)
+        == 1,
+        1,
+        0,
     )
-    return 0.5*(np.sum(V*b))
+    return 0.5 * (np.sum(V * b))
+
 
 @njit
 def calculate_energy_3(polymer: np.ndarray, V: np.ndarray) -> float:
     """idk... think it works. maybe. see Oskar's notebook for details lol."""
     N = len(polymer)
-    L = np.repeat(polymer, N).reshape(2*N,N)
+    L = np.repeat(polymer, N).reshape(2 * N, N)
 
     def is_neighbor(L):
-        return np.abs(L[::2] - L[::2].transpose()) + np.abs(L[1::2] - L[1::2].transpose()) == 1
-    
-    b = np.where( is_neighbor(L), 1, 0)
-    return 0.5*(np.sum(V*b))
+        return (
+            np.abs(L[::2] - L[::2].transpose()) + np.abs(L[1::2] - L[1::2].transpose())
+            == 1
+        )
+
+    b = np.where(is_neighbor(L), 1, 0)
+    return 0.5 * (np.sum(V * b))
 
 
 if __name__ == "__main__":
@@ -272,10 +231,9 @@ if __name__ == "__main__":
             [-2, -3],
         ]
     )
-    
+
     V = utilities.gen_V_matrix(7)
     V2 = utilities.gen_V_matrix(11, fill_value=1)
     print(calculate_energy_3(pol, V))
     print(calculate_energy_3(pol2, V2))
     print(calculate_energy_2(pol2, V2))
-

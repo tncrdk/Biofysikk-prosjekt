@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.spatial.distance import cdist
+from numba import njit
 
 
 def gen_V_matrix(size: int, fill_value: float = -1.0) -> np.ndarray:

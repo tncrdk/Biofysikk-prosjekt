@@ -150,10 +150,10 @@ if __name__ == "__main__":
         # test_check_if_intact,
         # test_check_if_intact_explicit,
         # test_visualization,
-        # test_rotate_polymer,
+        test_rotate_polymer,
         # test_calculate_energy,
         # test_metropolis,
-        test_calculate_energy,
+        # test_calculate_energy,
     ]
 
     for i, test in enumerate(tests):
