@@ -72,6 +72,10 @@ def calculate_energy_setup():
     return a, V
 
 
+def bench_rotate_polymer_setup():
+    return (polymer.generate_flat_polymer(35), )
+
+
 @benchmark(iterations=1000, setup_func=calculate_energy_setup, warmup=1)
 def bench_calculate_energy(a: np.ndarray, V: np.ndarray):
     return polymer.calculate_energy(a, V)
@@ -85,15 +89,26 @@ def bench_calculate_energy_2(a: np.ndarray, V: np.ndarray):
 def bench_calculate_energy_3(a: np.ndarray, V: np.ndarray):
     return polymer.calculate_energy_3(a, V)
 
+@benchmark(iterations=1000, setup_func=bench_rotate_polymer_setup)
+def bench_rotate_polymer(pol: np.ndarray):
+    a = polymer.rotate_polymer(pol, 15)
+    a = polymer.rotate_polymer(a, 10)
+    a = polymer.rotate_polymer(a, 3, False)
+    a = polymer.rotate_polymer(a, 20)
+    a = polymer.rotate_polymer(a, 15, False)
+    a = polymer.rotate_polymer(a, 25)
+
 if __name__ == "__main__":
-    time1, results1 = bench_calculate_energy()
-    time2, results2 = bench_calculate_energy_2()
-    time3, results3 = bench_calculate_energy_3()
+    # time1, results1 = bench_calculate_energy()
+    # time2, results2 = bench_calculate_energy_2()
+    # time3, results3 = bench_calculate_energy_3()
+    #
+    # print(f"func: bench_calculate_energy\ntime: {time1:>10.5e}\nresults[0]: {results1[0]}\n")
+    # print(f"func: bench_calculate_energy2\ntime: {time2:>10.5e}\nresults[0]: {results2[0]}\n")
+    # print(f"func: bench_calculate_energy3\ntime: {time3:>10.5e}\nresults[0]: {results3[0]}\n")
 
-    print(f"func: bench_calculate_energy\ntime: {time1:>10.5e}\nresults[0]: {results1[0]}\n")
-    print(f"func: bench_calculate_energy2\ntime: {time2:>10.5e}\nresults[0]: {results2[0]}\n")
-    print(f"func: bench_calculate_energy3\ntime: {time3:>10.5e}\nresults[0]: {results3[0]}\n")
-
+    time, _ = bench_rotate_polymer()
+    print(f"Time: {time/6}")
     # benchmarks = [bench_calculate_energy]
     # for b in benchmarks:
     #     time, results = b()
