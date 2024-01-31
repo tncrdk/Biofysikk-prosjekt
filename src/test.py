@@ -2,7 +2,7 @@ import polymer
 import visualization
 import numpy as np
 import simulation
-
+import utilities
 
 """
 Tests for polymer.py
@@ -69,22 +69,40 @@ def test_rotate_polymer():
 
 
 def test_calculate_energy():
-    V = np.array(
-        [
-            [0, 0, 1, 1, 1, 1],
-            [0, 0, 0, 1, 1, 1],
-            [1, 0, 0, 0, 1, 1],
-            [1, 1, 0, 0, 0, 1],
-            [1, 1, 1, 0, 0, 0],
-            [1, 1, 1, 1, 0, 0],
-        ]
-    )
-    a = polymer.generate_flat_polymer(6)
-    E = polymer.calculate_energy(a, V)
-    print(E)
-    b = np.array([[0, 0], [1, 0], [1, 1], [0, 1], [-1, 1], [-2, 1]])
-    E = polymer.calculate_energy(b, V)
-    print(E)
+    """runs the calculate_energy function against
+    pre-calculated energy values for a handful of polymers."""
+    
+    V4_weird = utilities.gen_V_matrix(4, fill_value=-1)
+    V4_weird[-1, 0] = -2
+    V4_weird[0, -1] = -2
+
+    V6 = utilities.gen_V_matrix(6, fill_value=-1)
+    V8_neg = utilities.gen_V_matrix(8, fill_value=-2)
+    V8_pos = utilities.gen_V_matrix(8, fill_value=2)
+    
+    test_cases = [
+        # (V matrix, polymer, expected energy)
+        (V4_weird, np.array([[-1,0], [0,0], [0,1], [-1,1]]), -2),
+
+        (V6, polymer.generate_flat_polymer(6), 0),
+        (V6, np.array([[0, 0], [1, 0], [1, 1], [0, 1], [-1, 1], [-2, 1]]), -1),
+        (V6, np.array([[0, 0], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0]]), -2),
+        
+        (V8_neg, polymer.generate_flat_polymer(8), 0),
+        (V8_neg, np.array([[0, 0], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1]]), -6),
+        (V8_neg, np.array([[0, 0], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 2], [0, 2], [1, 2]]), -6),
+
+        (V8_pos, polymer.generate_flat_polymer(8), 0),
+        (V8_pos, np.array([[0, 0], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1]]), 6),
+        (V8_pos, np.array([[0, 0], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 2], [0, 2], [1, 2]]), 6)
+    ]
+
+    for test_case in test_cases:
+        energy = polymer.calculate_energy(test_case[1], test_case[0])
+        # energy = polymer.calculate_energy_2(test_case[1], test_case[0])
+        # energy = polymer.calculate_energy_3(test_case[1], test_case[0])
+        expected_energy = test_case[2]
+        assert  energy == expected_energy, f"{test_case[1]} has energy {energy}, but expected {expected_energy}"
 
 
 """
@@ -116,21 +134,7 @@ Tester for simulation.py
 
 
 def test_metropolis():
-    V = np.array(
-        [
-            [0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-            [0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1],
-            [-1, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1],
-            [-1, -1, 0, 0, 0, -1, -1, -1, -1, -1, -1],
-            [-1, -1, -1, 0, 0, 0, -1, -1, -1, -1, -1],
-            [-1, -1, -1, -1, 0, 0, 0, -1, -1, -1, -1],
-            [-1, -1, -1, -1, -1, 0, 0, 0, -1, -1, -1],
-            [-1, -1, -1, -1, -1, -1, 0, 0, 0, -1, -1],
-            [-1, -1, -1, -1, -1, -1, -1, 0, 0, 0, -1],
-            [-1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0],
-            [-1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0],
-        ]
-    )
+    V = utilities.gen_V_matrix(11, fill_value=-1)
     T = 1000
     pol = polymer.generate_flat_polymer(11)
     N_s = 1000
@@ -145,10 +149,11 @@ if __name__ == "__main__":
         # test_check_if_intact2,
         # test_check_if_intact,
         # test_check_if_intact_explicit,
-        # test_visualization
-        # test_rotate_polymer
-        # test_calculate_energy
-        test_metropolis
+        # test_visualization,
+        # test_rotate_polymer,
+        # test_calculate_energy,
+        # test_metropolis,
+        test_calculate_energy,
     ]
 
     for i, test in enumerate(tests):
