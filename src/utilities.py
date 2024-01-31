@@ -31,13 +31,13 @@ def gen_V_matrix(size: int, fill_value: float = -1.0) -> np.ndarray:
 
 @njit  # TODO: Diameter kan kanskje regnes ut samtidig som energien, siden de deler store deler av koden
 def calculate_diameter(polymer: np.ndarray) -> float:
-    """Finner diameteren til et polymer
+    """Finds the diameter of a polymer
 
     Args:
-        polymer (np.ndarray): polymeren som diameter skal finnes
+        polymer (np.ndarray): the polymer to find the diameter of
 
     Returns:
-        float: diameteren tim polymeren
+        float: diameter of the polymer
     """
     N = len(polymer)
     L = np.repeat(polymer, N).reshape(2 * N, N)
