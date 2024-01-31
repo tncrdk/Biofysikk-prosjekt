@@ -66,6 +66,7 @@ def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
     return True
 
 
+@njit
 def rotate_polymer(
     polymer: np.ndarray, rotation_center: int, positive_direction: bool = True
 ) -> np.ndarray:
