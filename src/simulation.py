@@ -35,16 +35,16 @@ def alg1(N: int, Ns: int) -> tuple[np.ndarray, int]:
 def metropolis(
     pol: np.ndarray, N_s: int, V: np.ndarray, T: float
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Kjører metropolis-algoritmen som beskrevet i oppgaveheftet
+    """Runs the Metropolis-algorithm
 
     Args:
-        pol: polymer starttilstand
-        N_s: Antall forsøk på rotasjon
-        V: Vekselvirkningene mellom to gitte monomerer
-        T: temperaturen i kelvin
+        pol: Polymer initial state
+        N_s: Rotation attempts
+        V: Interaction forces between two monomers
+        T: Temperature (Kelvin)
 
     Returns:
-        (Siste polymer , array med alle energiene som ble simulert)
+        (Last polymer created, array with all simulated energies)
     """
     E_array = np.zeros(N_s)
     N = len(pol)

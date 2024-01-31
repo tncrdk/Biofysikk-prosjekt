@@ -17,25 +17,24 @@ polymer: [
 
 
 def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
-    """Sjekker om en polymer er intakt
+    """Checks if polymer is intact
 
     Args:
-        polymer (np.ndarray): polymeren som sjekkes
-        polymer_length (int): lengden til polymeren
+        polymer (np.ndarray): The polymer to check
+        polymer_length (int): Length of the polymer
 
     Returns:
-        bool: True hvis polymeren er intakt
+        bool: True if the polymer is intact
     """
+    # Checks that the polymer has N monomers, where each has a unique whole number representation
     if np.size(np.unique(polymer, axis=0), axis=0) != polymer_length:
-        return False  # Sjekker både at den har N monomerer og at de alle har en unik heltallsrepresentasjon
+        return False
 
     for i in range(1, polymer_length):
+        # Don't have to take the square root (faster), as any value different from 1 indicates a broken polymer anyway.
         distance = (polymer[i - 1, 0] - polymer[i, 0]) ** 2 + (
             polymer[i - 1, 1] - polymer[i, 1]
-        ) ** 2  ## Trenger ikke kvadratrot fordi alt annet enn 1 som verdi er ikke intakt(også raskere)
-        distance = (polymer[i - 1, 0] - polymer[i, 0]) ** 2 + (
-            polymer[i - 1, 1] - polymer[i, 1]
-        ) ** 2  ## Trenger ikke kvadratrot fordi alt annet enn 1 som verdi er ikke intakt(også raskere)
+        ) ** 2
         if distance != 1:
             return False
     return True
