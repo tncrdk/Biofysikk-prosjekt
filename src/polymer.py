@@ -117,6 +117,52 @@ def rotate_polymer(
     return new_polymer
 
 
+@njit
+def rotate_polymer_mut(
+    polymer: np.ndarray, rotation_center: int, positive_direction: bool = True
+) -> np.ndarray:
+    """Rotates a polymer in the given direction around a monomer
+
+    Args:
+        polymer: A 2D numpy array with monomer coordinates
+
+        rotation_center: Which monomer to rotate around
+        `Note: It is not the index, but the monomer_number. [1, N]`
+
+        positive_direction: Rotate in the positive direction if True, or negative direction if False
+
+    Returns:
+        a rotated copy of the polymer
+    """
+    # Make a slicing array to rotate the correct end of the polymer
+    rotation_slice = np.full(len(polymer), False)
+
+    # Choose to rotate the shortest tail of the polymer
+    if rotation_center >= len(polymer) / 2:
+        rotation_slice[rotation_center:] = True
+    else:
+        rotation_slice[:rotation_center] = True
+
+    if positive_direction:
+        direction = 1
+    else:
+        direction = -1
+
+    # The coordinates in space of the rotation center
+    rotation_position = polymer[rotation_center - 1]
+
+    # Where _rel means the position relative to the rotation center
+    # new_x = x_s + new_x_rel
+    # new_y = y_s + new_y_rel
+    # new_x_rel = - (y - y_s) * direction
+    # new_y_rel = (x - x_s) * direction
+    new_pos_rel = ((polymer[rotation_slice] - rotation_position) * direction)[:, ::-1]
+    new_pos_rel[:, 0] *= -1  # Changes the sign of the x-values
+
+    polymer[rotation_slice] = rotation_position + new_pos_rel
+    return polymer
+
+
 def generate_flat_polymer(
     polymer_length: int, mid_of_polymer: np.ndarray = np.zeros(2)
 ) -> np.ndarray:
