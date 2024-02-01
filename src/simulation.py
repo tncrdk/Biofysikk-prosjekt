@@ -2,6 +2,7 @@ import numpy as np
 import polymer
 import visualization
 from scipy.constants import Boltzmann
+from numba import njit
 
 
 def alg1(N: int, Ns: int) -> tuple[np.ndarray, int]:
@@ -25,13 +26,14 @@ def alg1(N: int, Ns: int) -> tuple[np.ndarray, int]:
 
         # TODO: possible to mutate the same array instead of copying?
         twisted_pol = polymer.rotate_polymer(pol, rnd_monomer, rnd_rotate)
-        if polymer.check_if_intact_2(twisted_pol, N):
+        if polymer.check_if_intact_4(twisted_pol, N):
             counter += 1
             pol = twisted_pol
 
     return pol, counter
 
 
+@njit
 def metropolis(
     pol: np.ndarray, N_s: int, V: np.ndarray, T: float
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -57,7 +59,7 @@ def metropolis(
 
         # TODO: possible to mutate the same array instead of copying?
         twisted_pol = polymer.rotate_polymer(pol, rnd_monomer, rnd_rotate)
-        if polymer.check_if_intact_2(twisted_pol, N):
+        if polymer.check_if_intact_4(twisted_pol, N):
             i += 1
             E_new = polymer.calculate_energy(twisted_pol, V)
 
