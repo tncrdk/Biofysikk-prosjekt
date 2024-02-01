@@ -90,6 +90,43 @@ def check_if_intact_3(polymer: np.ndarray, polymer_length: int) -> bool:
         return False
     return True
 
+@njit
+def check_if_intact_4(polymer: np.ndarray, polymer_length: int) -> bool:
+    """Checks if polymer is intact
+
+    Args:
+        polymer (np.ndarray): polymer that is checked
+        polymer_length (int): length of the polymer
+
+    Returns:
+        bool: True if polymer is intact
+    """
+
+    if len(polymer) != polymer_length:
+        return False
+
+    unique_monomer = np.zeros_like(polymer)
+
+    for i in range(polymer_length):  
+        for j in range(i):
+            if (                    #checks that the monomer's coordinates are not similar to a previous monomer
+                polymer[i, 0] == unique_monomer[j, 0]
+                and polymer[i, 1] == unique_monomer[j, 1]
+            ):
+                return False
+            else:
+                unique_monomer[i] = polymer[i]
+
+    test = polymer[1:]
+    test_against = polymer[:-1]
+    distance_array = (test[:, 0] - test_against[:, 0]) ** 2 + (
+        test[:, 1] - test_against[:, 1]
+    ) ** 2  ## Don't need squareroot since all other values than 1 means that it is not intact 
+    if np.any(
+        distance_array != 1
+    ):  ## If distance-array contains anything other than 1, the polymer is not intact
+        return False
+    return True
 
 @njit
 def rotate_polymer(
