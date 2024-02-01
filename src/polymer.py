@@ -65,6 +65,31 @@ def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
         return False
     return True
 
+def check_if_intact_3(polymer: np.ndarray, polymer_length: int) -> bool:
+    """Sjekker om en polymer er intakt
+
+    Args:
+        polymer (np.ndarray): polymeren som sjekkes
+        polymer_length (int): lengden til polymeren
+
+    Returns:
+        bool: True hvis polymeren er intakt
+    """
+    if np.size(np.unique(polymer, axis=0), axis=0) != polymer_length:
+        return False
+        # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
+
+    test = polymer[1:]
+    test_mot = polymer[:-1]
+    distance_array = np.abs(test[:, 0] - test_mot[:, 0]) + np.abs(
+        test[:, 1] - test_mot[:, 1]
+    )  ## Trenger ikke kvadratrot fordi alt annet enn 1 som verdi er ikke intakt(også raskere)
+    if np.any(
+        distance_array != 1
+    ):  ## Hvis distance_array inneholder noe annet enn 1 er ikke polymer intakt; Kan bli raskere???
+        return False
+    return True
+
 
 @njit
 def rotate_polymer(
