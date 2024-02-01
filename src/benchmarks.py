@@ -2,6 +2,8 @@ import numpy as np
 from time import perf_counter
 from typing import Callable
 import polymer
+import simulation as sim
+import utilities as utils
 
 
 def benchmark(iterations: int = 10, setup_func=lambda x: None, warmup=1) -> Callable:
@@ -98,6 +100,20 @@ def bench_rotate_polymer(pol: np.ndarray):
     a = polymer.rotate_polymer(a, 15, False)
     a = polymer.rotate_polymer(a, 25)
 
+def metropolis_setup():
+    pol = polymer.generate_flat_polymer(35)
+    N_s = 100
+    V = utils.gen_V_matrix(35)
+    T = 293
+    return pol, N_s, V, T
+
+
+
+@benchmark(iterations=100, setup_func=metropolis_setup, warmup=5)
+def bench_metropolis(pol: np.ndarray, N_s: int, V: np.ndarray, T: float):
+    return sim.metropolis(pol, N_s, V, T)
+
+
 if __name__ == "__main__":
     # time1, results1 = bench_calculate_energy()
     # time2, results2 = bench_calculate_energy_2()
@@ -107,8 +123,8 @@ if __name__ == "__main__":
     # print(f"func: bench_calculate_energy2\ntime: {time2:>10.5e}\nresults[0]: {results2[0]}\n")
     # print(f"func: bench_calculate_energy3\ntime: {time3:>10.5e}\nresults[0]: {results3[0]}\n")
 
-    time, _ = bench_rotate_polymer()
-    print(f"Time: {time/6}")
+    time, res = bench_metropolis()
+    print(f"Time: {time}")
     # benchmarks = [bench_calculate_energy]
     # for b in benchmarks:
     #     time, results = b()
