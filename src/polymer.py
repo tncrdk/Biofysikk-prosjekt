@@ -225,6 +225,7 @@ def rotate_polymer_mut(
     return polymer
 
 
+@njit
 def generate_flat_polymer(
     polymer_length: int, mid_of_polymer: np.ndarray = np.zeros(2)
 ) -> np.ndarray:

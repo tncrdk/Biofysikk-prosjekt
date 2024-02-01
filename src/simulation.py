@@ -5,6 +5,7 @@ from scipy.constants import Boltzmann
 from numba import njit
 
 
+@njit
 def alg1(N: int, Ns: int) -> tuple[np.ndarray, int]:
     """Implementation of algorithm 1.
     ---
