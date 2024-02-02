@@ -34,7 +34,7 @@ def gen_V_matrix(
     else:
         assert len(fill_value) == 2, "There is an error in the type of fill_value"
         V = np.zeros((size, size))
-        for i in range(size):
+        for i in range(1, size):
             for j in range(i):
                 value = np.random.default_rng().uniform(fill_value[0], fill_value[1])
                 V[i, j] = value
@@ -46,6 +46,7 @@ def gen_V_matrix(
 
         return V
 
+print(gen_V_matrix(6, (-6, -2)))
 
 @njit  # TODO: Diameter kan kanskje regnes ut samtidig som energien, siden de deler store deler av koden
 def calculate_diameter(polymer: np.ndarray) -> float:
