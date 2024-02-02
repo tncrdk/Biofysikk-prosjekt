@@ -3,7 +3,9 @@ from scipy.spatial.distance import cdist
 from numba import njit
 
 
-def gen_V_matrix(size: int, fill_value: float = -1.0) -> np.ndarray:
+def gen_V_matrix(
+    size: int, fill_value: float | tuple[float, float] = -1.0
+) -> np.ndarray:
     """
     With fill_value = -1 ge_V_matrix generates a size*size matrix:
          0  0 -1 -1 ... -1 -1 -1
@@ -17,16 +19,32 @@ def gen_V_matrix(size: int, fill_value: float = -1.0) -> np.ndarray:
 
     Args:
         size: size of array
-        fill_value: float
+        fill_value: float | tuple[lower, upper]
 
     Returns:
         the matrix
     """
-    V = np.full((size, size), fill_value)
-    np.fill_diagonal(V, 0)
-    np.fill_diagonal(V[:-1, 1:], 0)
-    np.fill_diagonal(V[1:, :-1], 0)
-    return V
+    if type(fill_value) == float:
+        V = np.full((size, size), fill_value)
+        np.fill_diagonal(V, 0)
+        np.fill_diagonal(V[:-1, 1:], 0)
+        np.fill_diagonal(V[1:, :-1], 0)
+        return V
+
+    else:
+        assert len(fill_value) == 2, "There is an error in the type of fill_value"
+        V = np.zeros((size, size))
+        for i in range(size):
+            for j in range(i):
+                value = np.random.default_rng().uniform(fill_value[0], fill_value[1])
+                V[i, j] = value
+                V[j, i] = value
+        np.fill_diagonal(V, 0)
+        np.fill_diagonal(V[:-1, 1:], 0)
+        np.fill_diagonal(V[1:, :-1], 0)
+        # this can be done in the for-loops, but this is easier to read and is more foolproof
+
+        return V
 
 
 @njit  # TODO: Diameter kan kanskje regnes ut samtidig som energien, siden de deler store deler av koden
