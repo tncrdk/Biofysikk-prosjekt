@@ -1,32 +1,26 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from pathlib import Path
-
 
 def illustrate_polymer(
+    ax,
     polymer: np.ndarray,
     cmap: str = "binary",
     numbers: bool = False,
-    title: str = "",
-    save_to_file: bool = False,
-    filename: str | Path = "",
+    title: str = ""
 ) -> None:
     """
     Uses matplotlib.pyplot.pcolormesh to illustrate a polymer.
 
     Args:
+        ax: the Axes to which illustrate_polymer will plot the result.
         polymer: Nx2-dimensional array containing coordinates for the N monomers
         cmap: matplotlib colormap
         number: Defaults to False. If True the monomers will display their index
         title: Title
-        save_to_file: Defaults to False
-        filename: if save_to_file is True filename has to be specified.
-
+        
     Returns:
         None
     """
-    fig, ax = plt.subplots()
-
     # Make a NxN-grid
     N = len(polymer)
     x = y = np.arange(N + 1)
@@ -45,15 +39,8 @@ def illustrate_polymer(
 
     ax.pcolormesh(x, y, Z, shading="flat", cmap=cmap)
     ax.set(title=title, xticks=x, xticklabels=[], yticks=y, yticklabels=[])
-    plt.tick_params(axis="both", left=False, right=False, bottom=False, top=False)
-    ax.grid()
-
-    if not save_to_file:
-        plt.show()
-    else:
-        print(f"function illustrate_polymer() in {__file__}:\n\tsaving a plot to {filename}")
-        plt.savefig(filename)
-
+    ax.tick_params(axis="both", left=False, right=False, bottom=False, top=False)
+    ax.grid(True)
 
 if __name__ == "__main__":
     a = np.array([[0, 0], [0, 1], [1, 1]])
