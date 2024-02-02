@@ -284,31 +284,24 @@ def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
 
 @njit
 def calculate_energy_2(polymer: np.ndarray, V: np.ndarray) -> float:
-    """idk... think it works. maybe. see Oskar's notebook for details lol."""
+    """Calculates the energy of the given polymer.
+    
+     Args:
+        polymer: A 2D numpy array with monomer coordinates
+
+        V: A matrix with the bonding energies for the monomers of the given polymer.
+        V[i, j] = V[j, i] = bonidng energy for the bond between monomer number (i+1) and (j+1).
+
+    Returns:
+        The energy of the polymer"""
     N = len(polymer)
     L = np.repeat(polymer, N).reshape(2 * N, N)
     b = np.where(
         ((L[::2] - L[::2].transpose()) ** 2 + (L[1::2] - L[1::2].transpose()) ** 2)
         == 1,
         1,
-        0,
+        0
     )
-    return 0.5 * (np.sum(V * b))
-
-
-@njit
-def calculate_energy_3(polymer: np.ndarray, V: np.ndarray) -> float:
-    """idk... think it works. maybe. see Oskar's notebook for details lol."""
-    N = len(polymer)
-    L = np.repeat(polymer, N).reshape(2 * N, N)
-
-    def is_neighbor(L):
-        return (
-            np.abs(L[::2] - L[::2].transpose()) + np.abs(L[1::2] - L[1::2].transpose())
-            == 1
-        )
-
-    b = np.where(is_neighbor(L), 1, 0)
     return 0.5 * (np.sum(V * b))
 
 
@@ -325,25 +318,5 @@ if __name__ == "__main__":
         ]
     )
 
-    # dette er ikkje eit lovleg polymer.
-    pol2 = np.array(
-        [
-            [0, 0],
-            [1, 0],
-            [1, 1],
-            [0, 1],
-            [-1, 1],
-            [-2, 1],
-            [-2, 0],
-            [-1, 0],
-            [-2, -1],
-            [-2, -2],
-            [-2, -3],
-        ]
-    )
-
     V = utilities.gen_V_matrix(7)
-    V2 = utilities.gen_V_matrix(11, fill_value=1)
-    print(calculate_energy_3(pol, V))
-    print(calculate_energy_3(pol2, V2))
-    print(calculate_energy_2(pol2, V2))
+    print(calculate_energy_2(pol, V))
