@@ -1,7 +1,7 @@
 import numpy as np
-import time
 from numba import njit
 import utilities
+import visualization
 
 """
 polymer: [ 
@@ -16,7 +16,7 @@ polymer: [
 """
 
 
-def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
+def check_if_intact_1(polymer: np.ndarray, polymer_length: int) -> bool:
     """Checks if polymer is intact
 
     Args:
@@ -65,6 +65,7 @@ def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
         return False
     return True
 
+
 def check_if_intact_3(polymer: np.ndarray, polymer_length: int) -> bool:
     """Sjekker om en polymer er intakt
 
@@ -90,6 +91,7 @@ def check_if_intact_3(polymer: np.ndarray, polymer_length: int) -> bool:
         return False
     return True
 
+
 @njit
 def check_if_intact_4(polymer: np.ndarray, polymer_length: int) -> bool:
     """Checks if polymer is intact
@@ -106,10 +108,14 @@ def check_if_intact_4(polymer: np.ndarray, polymer_length: int) -> bool:
         return False
 
     unique_monomer = np.zeros_like(polymer)
+    # First monomer is always unique
+    unique_monomer[0] = polymer[0]
 
-    for i in range(polymer_length):  
+    # Does not have to check the first monomer
+    for i in range(1, polymer_length):
         for j in range(i):
-            if (                    #checks that the monomer's coordinates are not similar to a previous monomer
+            # checks that the monomer's coordinates are not similar to a previous monomer
+            if (
                 polymer[i, 0] == unique_monomer[j, 0]
                 and polymer[i, 1] == unique_monomer[j, 1]
             ):
@@ -119,14 +125,16 @@ def check_if_intact_4(polymer: np.ndarray, polymer_length: int) -> bool:
 
     test = polymer[1:]
     test_against = polymer[:-1]
+    # Don't need squareroot since all other values than 1 means that it is not intact
     distance_array = (test[:, 0] - test_against[:, 0]) ** 2 + (
         test[:, 1] - test_against[:, 1]
-    ) ** 2  ## Don't need squareroot since all other values than 1 means that it is not intact 
-    if np.any(
-        distance_array != 1
-    ):  ## If distance-array contains anything other than 1, the polymer is not intact
+    ) ** 2
+
+    # If distance-array contains anything other than 1, the polymer is not intact
+    if np.any(distance_array != 1):
         return False
     return True
+
 
 @njit
 def rotate_polymer(
