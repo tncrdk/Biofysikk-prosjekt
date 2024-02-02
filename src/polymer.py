@@ -111,6 +111,7 @@ def check_if_intact_4(polymer: np.ndarray, polymer_length: int) -> bool:
     # First monomer is always unique
     unique_monomer[0] = polymer[0]
 
+    # # Checks for overlap
     # Does not have to check the first monomer
     for i in range(1, polymer_length):
         for j in range(i):
