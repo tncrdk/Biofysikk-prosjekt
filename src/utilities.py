@@ -7,7 +7,7 @@ def gen_V_matrix(
     size: int, fill_value: float | tuple[float, float] = -1.0
 ) -> np.ndarray:
     """
-    With fill_value = -1 ge_V_matrix generates a size*size matrix:
+    With fill_value = -1 gen_V_matrix generates a size*size matrix:
          0  0 -1 -1 ... -1 -1 -1
          0  0  0 -1 ... -1 -1 -1
         -1  0  0  0 ... -1 -1 -1
@@ -19,7 +19,8 @@ def gen_V_matrix(
 
     Args:
         size: size of array
-        fill_value: float | tuple[lower, upper]
+        fill_value: float | tuple[lower, upper]:
+            if tuple fill_values are drawn from a uniform distribution on [lower, upper].
 
     Returns:
         the matrix
