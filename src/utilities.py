@@ -27,25 +27,25 @@ def gen_V_matrix(
     """
     if type(fill_value) == float:
         V = np.full((size, size), fill_value)
-        np.fill_diagonal(V, 0)
-        np.fill_diagonal(V[:-1, 1:], 0)
-        np.fill_diagonal(V[1:, :-1], 0)
-        return V
 
     else:
         assert len(fill_value) == 2, "There is an error in the type of fill_value"
+        rng = np.random.default_rng()
         V = np.zeros((size, size))
         for i in range(1, size):
             for j in range(i):
-                value = np.random.default_rng().uniform(fill_value[0], fill_value[1])
+                value = rng.uniform(fill_value[0], fill_value[1])
                 V[i, j] = value
                 V[j, i] = value
-        np.fill_diagonal(V, 0)
-        np.fill_diagonal(V[:-1, 1:], 0)
-        np.fill_diagonal(V[1:, :-1], 0)
-        # this can be done in the for-loops, but this is easier to read and is more foolproof
 
-        return V
+    np.fill_diagonal(V, 0)
+    np.fill_diagonal(V[:-1, 1:], 0)
+    np.fill_diagonal(V[1:, :-1], 0)
+    # this can be done in the for-loops, but this is easier to read and is more foolproof
+
+    return V
+
+
 
 
 @njit  # TODO: Diameter kan kanskje regnes ut samtidig som energien, siden de deler store deler av koden
