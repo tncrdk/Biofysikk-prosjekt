@@ -40,7 +40,7 @@ def check_if_intact_1(polymer: np.ndarray, polymer_length: int) -> bool:
     return True
 
 
-def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
+def check_if_intact_3(polymer: np.ndarray, polymer_length: int) -> bool:
     """Sjekker om en polymer er intakt
 
     Args:
@@ -66,34 +66,33 @@ def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
     return True
 
 
-def check_if_intact_3(polymer: np.ndarray, polymer_length: int) -> bool:
-    """Sjekker om en polymer er intakt
+def check_if_intact_2(polymer: np.ndarray, polymer_length: int) -> bool:
+    """Checks if polymer is intact
 
     Args:
-        polymer (np.ndarray): polymeren som sjekkes
-        polymer_length (int): lengden til polymeren
+        polymer (np.ndarray): The polymer to check
+        polymer_length (int): Length of the polymer
 
     Returns:
-        bool: True hvis polymeren er intakt
+        bool: True if the polymer is intact
     """
+    # Checks that the polymer has N monomers, where each has a unique whole number representation
     if np.size(np.unique(polymer, axis=0), axis=0) != polymer_length:
         return False
-        # Sjekker både at den har N monomerer og da har de alle en unik heltallsrepresentasjon
 
     test = polymer[1:]
     test_mot = polymer[:-1]
+    # Don't have to take the square root or square (faster), as any value different from 1 indicates a broken polymer anyway.
     distance_array = np.abs(test[:, 0] - test_mot[:, 0]) + np.abs(
         test[:, 1] - test_mot[:, 1]
-    )  ## Trenger ikke kvadratrot fordi alt annet enn 1 som verdi er ikke intakt(også raskere)
-    if np.any(
-        distance_array != 1
-    ):  ## Hvis distance_array inneholder noe annet enn 1 er ikke polymer intakt; Kan bli raskere???
+    )
+    if np.any(distance_array != 1):
         return False
     return True
 
 
 @njit
-def check_if_intact_4(polymer: np.ndarray, polymer_length: int) -> bool:
+def check_if_intact(polymer: np.ndarray, polymer_length: int) -> bool:
     """Checks if polymer is intact
 
     Args:
@@ -259,7 +258,7 @@ def generate_flat_polymer(
 
 # The function can, (and should?), be JIT-compiled by numba.
 @njit()
-def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
+def calculate_energy_1(polymer: np.ndarray, V: np.ndarray) -> float:
     """Calculates the energy of the given polymer.
 
     Args:
@@ -272,29 +271,26 @@ def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
         The energy of the polymer
     """
     N = len(polymer)
-    # En matrise som angir om monomer (i+1) og (j+1) er naboer. b_matrix[i, j] = 1 dersom de er naboer.
-    # A matrix which tells if monomer (i+1) and (j+1) are neighbours. b_matrix[i, j] = 1 if they are, and 0 otherwise
-    b_matrix = np.zeros((N, N))
+    # A matrix which tells if monomer (i+1) and (j+1) are neighbours. b[i, j] = 1 if they are, and 0 otherwise
+    b = np.zeros((N, N))
     for i in range(0, N):
         # We only need to look at monomer combinations which we have not checked yet.
         # The next monomer in the polymer does not interact with the given monomer, so we don't have to check it.
         for j in range(i + 2, N):
-            # Kun nærmeste-nabo koordinater gir en euklidsk avstand på nøyaktig 1.
-            # Only "closest neighbour"-coordinates will give a euclidic distance of exactly one, so we dont have to take the square root
+            # Only "closest neighbour"-coordinates will give a euclidian distance of exactly one, so we dont have to take the square root.
             if np.sum((polymer[i] - polymer[j]) ** 2) == 1:
-                # Trenger bare fylle den nedre trekanten av matrisen,
                 # We only need to fill the lower triangle of the matrix, as it otherwise will just be symmetric.
                 # Note: j>i
-                b_matrix[j, i] = 1
-    # Don't have to divide by two, because we only filled the lower triangle of the b_matrix.
+                b[j, i] = 1
+    # Don't have to divide by two, because we only filled the lower triangle of the b.
     # We don't count the same interaction twice
-    return float(np.sum(V * b_matrix))
+    return float(np.sum(V * b))
 
 
 @njit
-def calculate_energy_2(polymer: np.ndarray, V: np.ndarray) -> float:
+def calculate_energy(polymer: np.ndarray, V: np.ndarray) -> float:
     """Calculates the energy of the given polymer.
-    
+
      Args:
         polymer: A 2D numpy array with monomer coordinates
 
@@ -309,7 +305,7 @@ def calculate_energy_2(polymer: np.ndarray, V: np.ndarray) -> float:
         ((L[::2] - L[::2].transpose()) ** 2 + (L[1::2] - L[1::2].transpose()) ** 2)
         == 1,
         1,
-        0
+        0,
     )
     return 0.5 * (np.sum(V * b))
 
@@ -328,4 +324,4 @@ if __name__ == "__main__":
     )
 
     V = utilities.gen_V_matrix(7)
-    print(calculate_energy_2(pol, V))
+    print(calculate_energy(pol, V))
