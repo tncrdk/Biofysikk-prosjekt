@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 def illustrate_polymer(
     ax,
     polymer: np.ndarray,
-    cmap: str = "binary",
+    cmap: str = "Greens",
     numbers: bool = False,
     title: str = ""
 ) -> None:
@@ -29,6 +29,7 @@ def illustrate_polymer(
     # Placing the polymer on the grid such that the middle monomer is in the center.
     middle_monomer = polymer[int(N / 2)]
     for i, monomer in enumerate(polymer):
+        # Shifting by 1 if N is even and middle monomer has negative coordinates
         shifty = (1 if N % 2 == 0 and middle_monomer[1] < 0 else 0)
         shiftx = (1 if N % 2 == 0 and middle_monomer[0] < 0 else 0)
         x_coord = monomer[1] + int(N / 2) - middle_monomer[1] - shifty
